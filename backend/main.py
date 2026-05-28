@@ -1,7 +1,9 @@
 import os
-from fastapi import HTTPException
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+app = FastAPI()
 
 ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 
@@ -12,8 +14,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 DEMO_TOKEN = os.getenv("DEMO_TOKEN", "demo-token-12345")
 security = HTTPBearer()
