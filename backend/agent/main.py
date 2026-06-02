@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
 
 from agente import agente
+from backend.main import DEMO_TOKEN
 
 
 app = FastAPI(
@@ -43,4 +44,20 @@ def chat(request: MensajeRequest):
 def limpiar_sesion(session_id: str):
     return {
         "mensaje": f"Sesión {session_id} cerrada"
+    }
+
+
+class LoginInput(BaseModel):
+    email: str
+    password: str
+
+
+@app.post("/auth/login")
+def login(body: LoginInput):
+    if body.password != DEMO_TOKEN:
+        raise HTTPException(status_code=401, detail="Token inválido")
+
+    return {
+        "token": DEMO_TOKEN,
+        "user": body.email
     }
